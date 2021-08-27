@@ -2,20 +2,20 @@
 import time
 import RPi.GPIO as gpio
 
-# monitor模块是我个人编写用于检测树莓派各项硬件信息的模块
-# monitor模块包含一个用于检测硬件信息的PiMonitor类
-# 内含多项通用静态类用于获取树莓派常用硬件信息
+# monitor是用于检测树莓派各项硬件信息的模块
+# 包含一个用于检测硬件信息的PiMonitor类
+# 以及多项通用静态类用于获取树莓派常用硬件信息
 # 使用本脚本之前，请确保monitor模块被包含在同级目录下
 from monitor import PiMonitor
 
-# date模块时我个人编写用于获取不同格式的本地时间信息的模块
-# date模块尚处于开发过程中，目前仅包含Date静态类
+# date是用于获取不同格式的本地时间信息的模块
+# 仅包含Date静态类
 # 使用本脚本之前，请确保date模块被包含在同级目录下
 from date import Date
 
 
 class SmartFan:
-    # 启用单例模式
+    # 单例模式
     _instance=None
     _BOARDPIN=(3,5,7,8,10,11,12,13,15,16,18,19,21,22,23,24,26,)
 
