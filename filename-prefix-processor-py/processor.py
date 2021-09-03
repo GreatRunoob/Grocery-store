@@ -1,17 +1,21 @@
-# -*- coding:utf-8 -*-
+#!/usr/bin/python3
 
 import os
 from typing import List
 
 
-# 路径检查
 def PathCheck(path:str)->bool:
+    '''
+    路径检查
+    '''
     # 判断给定路径是否存在且是否为文件目录
     return os.path.exists(path) and os.path.isdir(path)
 
 
-# 根据名称前缀，获取指定路径下的所有直属文件名信息
 def GetFiles(path:str, prefix:str)->List[str]:
+    '''
+    根据名称前缀，获取指定路径下的所有直属文件名信息
+    '''
     filenames = list()
 
     # 列出指定路径中所有直属文件信息
@@ -27,8 +31,10 @@ def GetFiles(path:str, prefix:str)->List[str]:
     return filenames
 
 
-# 重命名文件
 def Rename(path:str, prefix:str, filenames:List[str]):
+    '''
+    重命名文件
+    '''
     # 获取原文件名
     for filename in filenames:
         # 根据前缀切分原文件名并生成新文件名
