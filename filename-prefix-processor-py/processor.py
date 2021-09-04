@@ -56,7 +56,6 @@ def main():
             return
 
         prefix = input("请输入待处理文件的名称前缀:\n")
-
         filenames = GetFiles(path,prefix)
         if len(filenames) == 0:
             print("{0}路径下暂无以'{1}'为前缀的文件!".format(path,prefix))
@@ -73,6 +72,7 @@ def main():
 
         Rename(path,prefix,filenames)
         print("Done!")
+
     except Exception as e:
         print(e)
 
