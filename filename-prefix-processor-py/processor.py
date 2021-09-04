@@ -4,7 +4,7 @@ import os
 from typing import List
 
 
-def PathCheck(path:str)->bool:
+def checkpath(path:str)->bool:
     '''
     路径检查
     '''
@@ -12,7 +12,7 @@ def PathCheck(path:str)->bool:
     return os.path.exists(path) and os.path.isdir(path)
 
 
-def GetFiles(path:str, prefix:str)->List[str]:
+def getfiles(path:str, prefix:str)->List[str]:
     '''
     根据名称前缀，获取指定路径下的所有直属文件名信息
     '''
@@ -31,7 +31,7 @@ def GetFiles(path:str, prefix:str)->List[str]:
     return filenames
 
 
-def Rename(path:str, prefix:str, filenames:List[str]):
+def rename(path:str, prefix:str, filenames:List[str]):
     '''
     重命名文件
     '''
@@ -51,26 +51,29 @@ def Rename(path:str, prefix:str, filenames:List[str]):
 def main():
     try:
         path = input("请输入待处理文件的所在路径:\n")
-        if PathCheck(path) is False:
+        if checkpath(path) is False:
             print("指定文件路径不存在!")
             return
 
+        # 将目标路径转换为绝对路径，便于表示
+        path = os.path.abspath(path)
+
         prefix = input("请输入待处理文件的名称前缀:\n")
-        filenames = GetFiles(path,prefix)
+        filenames = getfiles(path,prefix)
         if len(filenames) == 0:
             print("{0}路径下暂无以'{1}'为前缀的文件!".format(path,prefix))
             return
 
         print("已为您匹配到以下文件:")
         for filename in filenames:
-            print(filename)
+            print(os.path.join(path,filename))
 
         verification = input("确认是否执行操作[y/n]:")
         if verification != "y":
             print("已终止操作!")
             return
 
-        Rename(path,prefix,filenames)
+        rename(path,prefix,filenames)
         print("Done!")
 
     except Exception as e:
