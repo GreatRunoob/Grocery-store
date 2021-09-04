@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -30,7 +31,14 @@ func main() {
 	}
 
 	// 判断文件路径是否合法
-	if err := PathCheck(path); err != nil {
+	if err := CheckPath(path); err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	// 将目标路径统一转换为绝对路径，便于表示
+	path, err = filepath.Abs(path)
+	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
@@ -55,7 +63,7 @@ func main() {
 
 	fmt.Println("已为您匹配到以下文件:")
 	for _, file := range files {
-		fmt.Println(file)
+		fmt.Println(joinPath(path, file))
 	}
 
 	fmt.Println("确认是否执行操作[y/n]:")
@@ -89,7 +97,7 @@ func ReadString(inputReader *bufio.Reader) (input string, err error) {
 }
 
 // 路径检查
-func PathCheck(path string) (err error) {
+func CheckPath(path string) (err error) {
 	// 判断给定路径是否存在
 	stat, err := os.Stat(path)
 	if os.IsNotExist(err) {
@@ -133,8 +141,8 @@ func Rename(path, prefix string, files []string) (err error) {
 		// 根据前缀切分原文件名并生成新文件名
 		new_filename := filename[len(prefix):]
 
-		old_path := path + PathSeparator + filename
-		new_path := path + PathSeparator + new_filename
+		old_path := joinPath(path, filename)
+		new_path := joinPath(path, new_filename)
 
 		if err = os.Rename(old_path, new_path); err != nil {
 			return
@@ -142,4 +150,9 @@ func Rename(path, prefix string, files []string) (err error) {
 	}
 	// done!
 	return
+}
+
+// 文件路径拼接
+func joinPath(paths ...string) string {
+	return strings.Join(paths, PathSeparator)
 }
