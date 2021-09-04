@@ -19,7 +19,7 @@ import (
 )
 
 const PathSeparator = string(os.PathSeparator) // 平台文件路径分隔符
-const maxWorkerCount int = 32                  // 最大同时进行路径搜索的协程数
+const maxWorkerCount int = 16                  // 最大同时进行路径搜索的协程数
 
 var searchRequest = make(chan string) // 请求另外启用路径搜索协程
 var foundMatch = make(chan string)    // 存在可能的匹配项
@@ -76,7 +76,7 @@ func main() {
 		case <-workingDone: // 接收到协程工作结束信号
 			workerCount--         // 讲当前正在进行搜索工作的协程数量-1
 			if workerCount == 0 { // 当前不存在进行搜索工作的协程
-				goto end // 结束等待，搜索工作结束
+				goto finish // 结束等待，搜索工作结束
 			}
 		case path := <-foundMatch: // 接收到可能的匹配项
 			fmt.Println(path)
@@ -84,7 +84,7 @@ func main() {
 		}
 	}
 
-end:
+finish:
 	close(searchRequest)
 	close(foundMatch)
 	close(workingDone)
@@ -128,7 +128,7 @@ func CheckPath(path string) (err error) {
 func Search(path, substr string, goroutine bool) (err error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		return
+		goto end
 	}
 
 	for _, file := range files {
@@ -155,6 +155,7 @@ func Search(path, substr string, goroutine bool) (err error) {
 	// 直到当前路径下所有子文件全部进行过匹配
 	// 若当前协程匹配的是普通文件，则无需继续递归查询
 
+end:
 	if goroutine { // 协程本次搜索工作结束之前，传递结束信号
 		workingDone <- true
 	}
