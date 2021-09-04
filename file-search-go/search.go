@@ -40,7 +40,7 @@ func main() {
 	}
 
 	// 检查目标文件路径是否合法
-	if err := PathCheck(path); err != nil {
+	if err := CheckPath(path); err != nil {
 		fmt.Println("Error", err)
 		return
 	}
@@ -109,7 +109,7 @@ func ReadString(inputReader *bufio.Reader) (input string, err error) {
 }
 
 // 路径检查
-func PathCheck(path string) (err error) {
+func CheckPath(path string) (err error) {
 	// 判断给定路径是否存在
 	stat, err := os.Stat(path)
 	if os.IsNotExist(err) {
@@ -135,19 +135,19 @@ func Search(path, substr string, goroutine bool) (err error) {
 		filename := file.Name()
 		if strings.Contains(filename, substr) { // 匹配是否包含关键词
 			if file.IsDir() {
-				foundMatch <- pathJoin(path, filename, "")
+				foundMatch <- joinPath(path, filename, "")
 				// e.g. foundMatch <- "/root/dir/"
 			} else {
-				foundMatch <- pathJoin(path, filename)
+				foundMatch <- joinPath(path, filename)
 				// e.g. foundMatch <- "/root/file"
 			}
 		}
 
 		if file.IsDir() { //未匹配到关键词，但本身是子目录
 			if workerCount < maxWorkerCount { // 检查当前是否允许提交分工请求
-				searchRequest <- pathJoin(path, filename) // 允许，提交请求
+				searchRequest <- joinPath(path, filename) // 允许，提交请求
 			} else {
-				Search(pathJoin(path, filename), substr, false) // 不允许，让当前协程递归进行搜索
+				Search(joinPath(path, filename), substr, false) // 不允许，让当前协程递归进行搜索
 			}
 		}
 	}
@@ -162,6 +162,6 @@ func Search(path, substr string, goroutine bool) (err error) {
 }
 
 // 文件路径拼接
-func pathJoin(paths ...string) string {
+func joinPath(paths ...string) string {
 	return strings.Join(paths, PathSeparator)
 }
