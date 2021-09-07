@@ -66,7 +66,7 @@ func main() {
 		fmt.Println(joinPath(path, file))
 	}
 
-	fmt.Println("确认是否执行操作[y/n]:")
+	fmt.Printf("确认是否执行操作[y/n]:")
 	verification, err := ReadString(inputReader)
 	if err != nil {
 		fmt.Println("Error:", err)
