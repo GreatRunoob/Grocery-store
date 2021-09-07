@@ -1,16 +1,28 @@
 /*
 TCP端口并发扫描器
 模拟goroutine池实现并发扫描
+支持命令行参数 -ip -from -to
 */
 
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net"
 	"sort"
 	"time"
 )
+
+var scanIp string
+var fromPort int
+var toPort int
+
+func init() {
+	flag.StringVar(&scanIp, "ip", "127.0.0.1", "Set scanned ip(default:127.0.0.1)")
+	flag.IntVar(&fromPort, "from", 1, "Set the start port(default:1)")
+	flag.IntVar(&toPort, "to", 1024, "Set the end port(default:1024)")
+}
 
 // 暂且称之为端口扫描工具人
 func Worker(ip string, ports, results chan int) {
@@ -29,9 +41,7 @@ func Worker(ip string, ports, results chan int) {
 
 func main() {
 	// 这是督工今天从老板那边收到的任务要求
-	scan_ip := "127.0.0.1"
-	from_port := 1
-	to_port := 1024
+	flag.Parse()
 
 	ports := make(chan int, 100) // 督工提供带缓冲的端口池，准备了100个工作岗位
 	results := make(chan int)    // 除了用于接受结果以外，还充当阻塞main goroutine的作用
@@ -41,19 +51,19 @@ func main() {
 	// 督工招聘工具人并让它们等待被分配工作
 	// 工具人之间的工作是互不干扰的
 	for i := 0; i < cap(ports); i++ {
-		go Worker(scan_ip, ports, results)
+		go Worker(scanIp, ports, results)
 	}
 
 	// 督工向端口池中传入端口号，将工作分配给工具人
 	go func() {
-		for port := from_port; port <= to_port; port++ {
+		for port := fromPort; port <= toPort; port++ {
 			ports <- port
 		}
 	}()
 
 	// 督工等待并接收来自工具人的工作结果
 	start := time.Now()
-	for port := from_port; port <= to_port; port++ {
+	for port := fromPort; port <= toPort; port++ {
 		result := <-results
 		if result != 0 { // 同时，记录那些已开放的端口号
 			opened_ports = append(opened_ports, result)
@@ -66,9 +76,9 @@ func main() {
 
 	sort.Ints(opened_ports) // 晚上，督工按顺序整理今天的任务报告，准备在明天将工作成果向老板你汇报
 	for _, port := range opened_ports {
-		fmt.Printf("%s:%d is opened.\n", scan_ip, port)
+		fmt.Printf("%s:%d is opened.\n", scanIp, port)
 	}
-	fmt.Printf("It takes %v\n", end)
 
 	// 工作顺利交差，真是美好的一天
+	fmt.Printf("It takes %v\n", end)
 }
