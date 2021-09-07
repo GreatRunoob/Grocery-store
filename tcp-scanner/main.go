@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net"
 	"sort"
+	"time"
 )
 
 // 暂且称之为端口扫描工具人
@@ -51,12 +52,14 @@ func main() {
 	}()
 
 	// 督工等待并接收来自工具人的工作结果
+	start := time.Now()
 	for port := from_port; port <= to_port; port++ {
 		result := <-results
 		if result != 0 { // 同时，记录那些已开放的端口号
 			opened_ports = append(opened_ports, result)
 		}
 	}
+	end := time.Since(start)
 
 	close(ports)   // 完成今天的任务后，督工让工具人们下班
 	close(results) // 同时，督工自己打卡下班，结束了一天的工作
@@ -65,6 +68,7 @@ func main() {
 	for _, port := range opened_ports {
 		fmt.Printf("%s:%d is opened.\n", scan_ip, port)
 	}
+	fmt.Printf("It takes %v\n", end)
 
 	// 工作顺利交差，真是美好的一天
 }
