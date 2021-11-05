@@ -134,17 +134,10 @@ func (this *User) DoMessage(msg string) {
 
 //监听当前user channel，一旦有消息就直接广播给用户
 func (this *User) ListenMessage() {
+	// 从user channel中获取服务端广播消息反馈给用户
 	// 通过不断轮询user channel的方式
 	// 其实也算不上轮询，如果没有消息则会被阻塞
-	for {
-		// 从user channel中获取服务端广播消息反馈给用户
-		msg, ok := <-this.Chan
-
-		// 检测用户通信频道是否已被主动关闭
-		if !ok {
-			break
-		}
-
+	for msg := range this.Chan {
 		// 格式化服务端的广播消息，约定默认末尾缺少换行符
 		// 针对其他需要广播给用户的消息也要注意格式的问题
 		this.conn.Write([]byte(msg + "\n"))
