@@ -1,14 +1,14 @@
 #include<stdlib.h>
 #include"queue.h"
 
-_Bool queue_is_invalid(p_queue queue)
+_Bool queue_is_invalid(queue_ptr queue)
 {
 	return !queue_is_valid(queue);
 };
 
-p_qnode init_qnode(que_elem_t elem)
+qnode_ptr init_qnode(que_elem_t elem)
 {
-	p_qnode qnode=(p_qnode)malloc(sizeof(struct qnode));
+	qnode_ptr qnode=(qnode_ptr)malloc(sizeof(struct qnode));
 	if(qnode)
 	{
 		qnode->elem=elem;
@@ -17,9 +17,9 @@ p_qnode init_qnode(que_elem_t elem)
 	return qnode;
 }
 
-p_queue init_queue()
+queue_ptr init_queue()
 {
-	p_queue queue=(p_queue)malloc(sizeof(struct queue));
+	queue_ptr queue=(queue_ptr)malloc(sizeof(struct queue));
 	if(queue)
 	{
 		queue->head=NULL;
@@ -29,27 +29,27 @@ p_queue init_queue()
 	return queue;
 }
 
-que_size_t get_que_size(p_queue queue)
+que_size_t get_que_size(queue_ptr queue)
 {
 	return queue->size;
 }
 
-_Bool queue_is_valid(p_queue queue)
+_Bool queue_is_valid(queue_ptr queue)
 {
 	return queue!=NULL;
 }
 
-_Bool queue_is_empty(p_queue queue)
+_Bool queue_is_empty(queue_ptr queue)
 {
 	return get_que_size(queue)==QUEUE_EMPTY;
 }
 
-_Bool en_queue(p_queue queue, que_elem_t elem)
+_Bool en_queue(queue_ptr queue, que_elem_t elem)
 {
 	if(queue_is_invalid(queue))
 		return FALSE;
 
-	p_qnode qnode=init_qnode(elem);
+	qnode_ptr qnode=init_qnode(elem);
 	if(!qnode)
 		return FALSE;
 
@@ -67,7 +67,7 @@ _Bool en_queue(p_queue queue, que_elem_t elem)
 	return TRUE;
 }
 
-_Bool de_queue(p_queue queue,que_elem_t* elem)
+_Bool de_queue(queue_ptr queue,que_elem_t* elem)
 {
 	if(queue_is_invalid(queue))
 		return FALSE;
@@ -75,7 +75,7 @@ _Bool de_queue(p_queue queue,que_elem_t* elem)
 	if(queue_is_empty(queue))
 		return FALSE;
 
-	p_qnode de_node=queue->head;
+	qnode_ptr de_node=queue->head;
 	if(queue->head==queue->tail)
 		queue->head=queue->tail=NULL;
 	else
@@ -87,7 +87,7 @@ _Bool de_queue(p_queue queue,que_elem_t* elem)
 	return TRUE;
 }
 
-_Bool empty_queue(p_queue queue)
+_Bool empty_queue(queue_ptr queue)
 {
 	if(queue_is_invalid(queue))
 		return FALSE;
@@ -97,7 +97,7 @@ _Bool empty_queue(p_queue queue)
 	return TRUE;
 }
 
-p_queue del_queue(p_queue queue)
+queue_ptr del_queue(queue_ptr queue)
 {
 	if(empty_queue(queue))
 	{

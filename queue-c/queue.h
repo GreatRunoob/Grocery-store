@@ -8,32 +8,32 @@ typedef struct qnode
 {
 	que_elem_t elem;
 	struct qnode* next;
-} *p_qnode;
+} *qnode_ptr;
 
 typedef struct queue
 {
-	p_qnode head;
-	p_qnode tail;
+	qnode_ptr head;
+	qnode_ptr tail;
 	que_size_t size;
-} *p_queue;
+} *queue_ptr;
 
-p_qnode init_qnode(que_elem_t elem);
+qnode_ptr init_qnode(que_elem_t elem);
 
-p_queue init_queue();
+queue_ptr init_queue();
 
-que_size_t get_que_size(p_queue queue);
+que_size_t get_que_size(queue_ptr queue);
 
-_Bool queue_is_empty(p_queue queue);
+_Bool queue_is_empty(queue_ptr queue);
 
-_Bool queue_is_valid(p_queue queue);
+_Bool queue_is_valid(queue_ptr queue);
 
-_Bool en_queue(p_queue queue, que_elem_t elem);
+_Bool en_queue(queue_ptr queue, que_elem_t elem);
 
-_Bool de_queue(p_queue queue, que_elem_t* elem);
+_Bool de_queue(queue_ptr queue, que_elem_t* elem);
 
-_Bool empty_queue(p_queue queue);
+_Bool empty_queue(queue_ptr queue);
 
-p_queue del_queue(p_queue queue);
+queue_ptr del_queue(queue_ptr queue);
 
 #define QUEUE_EMPTY (que_size_t) 0
 #define FALSE (_Bool) 0

@@ -1,14 +1,14 @@
 #include<stdlib.h>
 #include"stack.h"
 
-_Bool stack_is_invalid(p_stack stack)
+_Bool stack_is_invalid(stack_ptr stack)
 {
 	return !stack_is_valid(stack);
 };
 
-p_snode init_snode(stck_elem_t elem)
+snode_ptr init_snode(stck_elem_t elem)
 {
-	p_snode snode=(p_snode)malloc(sizeof(struct snode));
+	snode_ptr snode=(snode_ptr)malloc(sizeof(struct snode));
 	if(snode)
 	{
 		snode->elem=elem;
@@ -17,9 +17,9 @@ p_snode init_snode(stck_elem_t elem)
 	return snode;
 }
 
-p_stack init_stack()
+stack_ptr init_stack()
 {
-	p_stack stack=(p_stack)malloc(sizeof(struct stack));
+	stack_ptr stack=(stack_ptr)malloc(sizeof(struct stack));
 	if(stack)
 	{
 		stack->top=NULL;
@@ -28,27 +28,27 @@ p_stack init_stack()
 	return stack;
 }
 
-stck_size_t get_stck_size(p_stack stack)
+stck_size_t get_stck_size(stack_ptr stack)
 {
 	return stack->size;
 }
 
-_Bool stack_is_empty(p_stack stack)
+_Bool stack_is_empty(stack_ptr stack)
 {
 	return get_stck_size(stack)==STACK_EMPTY;
 }
 
-_Bool stack_is_valid(p_stack stack)
+_Bool stack_is_valid(stack_ptr stack)
 {
 	return stack!=NULL;
 }
 
-_Bool push(p_stack stack, stck_elem_t elem)
+_Bool push(stack_ptr stack, stck_elem_t elem)
 {
 	if(stack_is_invalid(stack))
 		return FALSE;
 
-	p_snode snode=init_snode(elem);
+	snode_ptr snode=init_snode(elem);
 	if(!snode)
 		return FALSE;
 
@@ -58,7 +58,7 @@ _Bool push(p_stack stack, stck_elem_t elem)
 	return TRUE;
 }
 
-_Bool pop(p_stack stack, stck_elem_t* elem)
+_Bool pop(stack_ptr stack, stck_elem_t* elem)
 {
 	if(stack_is_invalid(stack))
 		return FALSE;
@@ -66,7 +66,7 @@ _Bool pop(p_stack stack, stck_elem_t* elem)
 	if(stack_is_empty(stack))
 		return FALSE;
 
-	p_snode pop_node=stack->top;
+	snode_ptr pop_node=stack->top;
 	stack->top=pop_node->next;
 	*elem=pop_node->elem;
 
@@ -75,7 +75,7 @@ _Bool pop(p_stack stack, stck_elem_t* elem)
 	return TRUE;
 }
 
-_Bool empty_stack(p_stack stack)
+_Bool empty_stack(stack_ptr stack)
 {
 	if(stack_is_invalid(stack))
 		return FALSE;
@@ -85,7 +85,7 @@ _Bool empty_stack(p_stack stack)
 	return TRUE;
 }
 
-p_stack del_stack(p_stack stack)
+stack_ptr del_stack(stack_ptr stack)
 {
 	if(empty_stack(stack))
 	{
