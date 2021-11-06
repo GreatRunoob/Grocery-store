@@ -31,6 +31,8 @@ _Bool en_queue(p_queue queue, que_elem_t elem);
 
 _Bool de_queue(p_queue queue, que_elem_t* elem);
 
+_Bool empty_queue(p_queue queue);
+
 p_queue del_queue(p_queue queue);
 
 #define QUEUE_EMPTY (que_size_t) 0

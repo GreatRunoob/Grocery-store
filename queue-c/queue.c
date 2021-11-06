@@ -87,12 +87,20 @@ _Bool de_queue(p_queue queue,que_elem_t* elem)
 	return TRUE;
 }
 
+_Bool empty_queue(p_queue queue)
+{
+	if(queue_is_invalid(queue))
+		return FALSE;
+
+	que_elem_t tmp;
+	while(de_queue(queue,&tmp));
+	return TRUE;
+}
+
 p_queue del_queue(p_queue queue)
 {
-	if(queue_is_valid(queue))
+	if(empty_queue(queue))
 	{
-		que_elem_t tmp;
-		while(de_queue(queue,&tmp));
 		free(queue);
 		queue=NULL;
 	}
