@@ -75,12 +75,20 @@ _Bool pop(p_stack stack, stck_elem_t* elem)
 	return TRUE;
 }
 
+_Bool empty_stack(p_stack stack)
+{
+	if(stack_is_invalid(stack))
+		return FALSE;
+
+	stck_elem_t tmp;
+	while(pop(stack,&tmp));
+	return TRUE;
+}
+
 p_stack del_stack(p_stack stack)
 {
-	if(stack_is_valid(stack))
+	if(empty_stack(stack))
 	{
-		stck_elem_t tmp;
-		while(pop(stack,&tmp));
 		free(stack);
 		stack=NULL;
 	}

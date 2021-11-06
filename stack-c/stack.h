@@ -30,6 +30,8 @@ _Bool push(p_stack stack, stck_elem_t elem);
 
 _Bool pop(p_stack stack, stck_elem_t* elem);
 
+_Bool empty_stack(p_stack stack);
+
 p_stack del_stack(p_stack stack);
 
 #define STACK_EMPTY (stck_size_t) 0
